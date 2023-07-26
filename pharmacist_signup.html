@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pharmacist Signup</title>
+  <style>
+   body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Styling for the video container */
+    #video-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    video {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      max-width: 400px; /* Set a maximum width for the form */
+      width: 90%; /* Adjust the width to 90% of the available space */
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      text-align: center; /* Center the text within the form */
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #666;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input[type="submit"] {
+      background-color: #664caf;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #5945a0;
+    }
+
+    button {
+      display: block;
+      margin-top: 20px;
+      background-color: #333;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div id="video-container">
+    <video autoplay loop muted>
+      <source src="background2.mp4" type="video/mp4">
+    </video>
+  </div>
+  <h1>Pharmacist Signup</h1>
+  <form action="http://localhost/practicephp/pharmacist_signup.php" method="POST">
+    <div>
+      <label for="full_name">Full Name:</label>
+      <input type="text" id="full_name" name="full_name" required>
+    </div>
+    <div>
+      <label for="gender">Gender:</label>
+      <select id="gender" name="gender">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="not_mention">Not Mention</option>
+      </select>
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+      <label for="date_of_birth">Date of Birth:</label>
+      <input type="date" id="date_of_birth" name="date_of_birth" required>
+    </div>
+    <div>
+      <label for="phone_number">Phone Number:</label>
+      <input type="tel" id="phone_number" name="phone_number">
+    </div>
+    <div>
+      <label for="address">Address:</label>
+      <input type="text" id="address" name="address">
+    </div>
+    <div>
+      <input type="submit" value="Sign Up">
+    </div>
+  </form>
+  <button onclick="window.location.href='select_user_signup.html'">Back</button>
+</body>
+</html>

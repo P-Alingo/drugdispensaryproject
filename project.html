@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="project.css">
+</head>
+<body class="page">
+  <div class="logo"><img src="logo.png" width="150" height="150"></div>
+
+<div class="topnav">
+  <a href="project.html">Home</a>
+  <a href="select_user_login.html">Login</a>
+  <a href="select_user_signup.html">Sign up</a>
+  <a href="#">Contact Us</a>
+
+</div>
+
+<p><div class="slideshow">
+  <img class="mySlide" src="img1.jpg">
+  <img class="mySlide" src="img3.jpg">
+  <img class="mySlide" src="img4.jpg">
+  <img class="mySlide" src="img5.png">
+  <img class="mySlide" src="img2.jpg">
+</div></p>
+<script type="text/javascript">
+  var myIndex = 0;
+carousel();
+
+function carousel() {
+  var i;
+  var x = document.getElementsByClassName("mySlide");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";  
+  }
+  myIndex++;
+  if (myIndex > x.length) {myIndex = 1}    
+  x[myIndex-1].style.display = "block";  
+  setTimeout(carousel, 4000); // Change image every 2 seconds
+}
+
+</script>
+
+<p><div class="content">
+  <p>Welcome to Rx Pharamas</p>
+  <p>Here we offer online consultations with certified doctors, we have excellent pharmacists to help you out with any medication right from the comfort of your houses.</p>
+  <p>Sign up for free today!</p>
+</div></p>
+
+<p><div class="phone">
+ <p><img src="call.png" width="50" height="50">Call us:0745797578/0732675367</p>
+  <p><img src="email.jpg" width="50" height="50">Email us: Rxpharma@gmail.com</p>
+</div></p>
+
+
+</body>
+</html>
