@@ -30,8 +30,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // Execute the query
   if ($conn->query($insertQuery) === TRUE) {
     // Admin data saved successfully
+    // Start the session
+    session_start();
+  
+    // Set the 'email' and 'full_name' in the session
+    $_SESSION['email'] = $email;
+    $_SESSION['full_name'] = $fullname;
+
+    // After successful registration
+    $_SESSION['registration_success'] = true;
     $conn->close();
-    header("Location: admin_login.html"); // Redirect to adminpage.html
+    header("Location: http://localhost/myproject/drugdispensaryproject/Adminpage.php"); // Redirect to adminpage.html
     exit();
   } else {
     echo "Error: " . $conn->error;

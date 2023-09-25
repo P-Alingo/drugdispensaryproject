@@ -1,54 +1,193 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="project.css">
+  <title>Good Health Pharmacy</title>
+
 </head>
+
 <body class="page">
-  <div class="logo"><img src="logo.png" width="150" height="150"></div>
+  <div id="video-container">
+    <video autoplay loop muted>
+      <source src="mainbackground.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="header">
+    <div class="logo">
+      <img src="logo.png" width="130" height="130" alt="Good Health Pharmacy Logo">
+    </div>
+    <div class="header-text">
+      <h1 class="header-title">Welcome to <span class="highlight-text">Good Health Pharmacy!</span></h1>
+    </div>
+    
+  </div>
 
-<div class="topnav">
-  <a href="project.html">Home</a>
-  <a href="select_user_login.html">Login</a>
-  <a href="select_user_signup.html">Sign up</a>
-  <a href="#">Contact Us</a>
+  <div class="topnav">
+    <a href="project.html">Home</a>
+    <a href="#services" class="cta-button">About Us</a>
+    <a href="select_user_login.html">Login</a>
+    <a href="select_user_signup.html">Sign Up</a>
+    <a href="#contact-us"class="cta-button">Contact Us</a>
+  </div>
 
-</div>
+  <div class="hero" id="registration">
+    <h1>Your Health, Our Priority</h1>
+    <h2>Register and Experience Convenient Healthcare</h2>
+    <p>Set appointments, access prescriptions, and get expert advice - all from the comfort of your home.</p>
+  </div>
+  
 
-<p><div class="slideshow">
-  <img class="mySlide" src="img1.jpg">
-  <img class="mySlide" src="img3.jpg">
-  <img class="mySlide" src="img4.jpg">
-  <img class="mySlide" src="img5.png">
-  <img class="mySlide" src="img2.jpg">
-</div></p>
-<script type="text/javascript">
-  var myIndex = 0;
-carousel();
+  <div class="image-slides-container">
+    <div class="image-slide">
+      <img src="image2.jpg" alt="Slide 1">
+    </div>
+    
+    <div class="card image-text">
+      <h2>Welcome to Good Health Pharmacy</h2>
+      <p>Good Health Pharmacy is your trusted partner for all your healthcare needs. We are dedicated to providing convenient and accessible healthcare solutions to our patients.</p>
+    </div>
+  </div>
+  
+  
+  <div class="image-slides-container">
+    <div class="card image-text">
+      <h3>Why Choose Good Health Pharmacy?</h3>
+      <ul>
+        <li>Quality healthcare services</li>
+        <li>Experienced medical professionals</li>
+        <li>Convenient and secure online access</li>
+        <li>24/7 customer support</li>
+      </ul>
+      <p>Experience the future of healthcare with us!</p>
+    </div>
+  
+    <div class="image-slide">
+      <img src="image5.jpg" alt="Slide 2">
+    </div>
+  </div>
 
-function carousel() {
-  var i;
-  var x = document.getElementsByClassName("mySlide");
-  for (i = 0; i < x.length; i++) {
-    x[i].style.display = "none";  
-  }
-  myIndex++;
-  if (myIndex > x.length) {myIndex = 1}    
-  x[myIndex-1].style.display = "block";  
-  setTimeout(carousel, 4000); // Change image every 2 seconds
-}
+  <div class="image-slides-container">
+    <div class="image-slide">
+      <img src="image4.webp" alt="Slide 1">
+    </div>
+    
+    <div class="card image-text">
+     <h4>With our online platform, what can you do?</h4>
+      <ul>
+        <li>Set appointments with certified doctors.</li>
+        <li>Access and manage your prescriptions securely.</li>
+        <li>Receive expert medical advice from our team of professionals.</li>
+      </ul>
+      <p>Join us today in prioritizing your health and well-being. Your health is our priority!</p>
+    </div>
+  </div>
+  
+  
+  <div class="services" id="services">
+    <div class="service-card">
+      <span class="service-icon">📅</span>
+      <h3>Set Appointments</h3>
+      <p>Book appointments with our certified doctors online. When you sign up, you will be able to:</p>
+      <ul>
+        <li>Choose from a wide range of available appointment slots.</li>
+        <li>Select your preferred healthcare specialist.</li>
+        <li>Receive email and SMS reminders for your appointments.</li>
+      </ul>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">💊</span>
+      <h3>Access Prescriptions</h3>
+      <p>View and manage your prescriptions securely. When you sign up, you will have access to:</p>
+      <ul>
+        <li>Your complete prescription history.</li>
+        <li>The ability to request prescription refills online.</li>
+        <li>Medication reminders to help you stay on track.</li>
+      </ul>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">🏥</span>
+      <h3>Expert Advice</h3>
+      <p>Get professional medical advice from our team of experts. When you sign up, you can:</p>
+      <ul>
+        <li>Ask health-related questions and receive personalized responses.</li>
+        <li>Access a library of medical articles and resources.</li>
+        <li>Receive notifications about health webinars and events.</li>
+      </ul>
+    </div>
+  </div>
+ 
+  <div class="slideshow-container">
+    <img class="mySlide" src="image1.jpg">
+    <img class="mySlide" src="image6.jpg">
+    <img class="mySlide" src="image3.jpg">
+  </div>
+  
 
-</script>
+  <div class="testimonials">
+    <h2>What Our Patients Say:</h2>
+    <div class="testimonial-card">
+      <div class="testimonial-content">
+        <p class="testimonial-text">"I love the convenience of setting appointments online. Good Health Pharmacy has made my life easier!"</p>
+        <p class="testimonial-author">- Sarah Johnson</p>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-content">
+        <p class="testimonial-text">"The pharmacists at Good Health Pharmacy are knowledgeable and friendly. I highly recommend them!"</p>
+        <p class="testimonial-author">- John Smith</p>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-content">
+        <p class="testimonial-text">"I love the site and I highly recommend it, make your life simpler by registering right now!"</p>
+        <p class="testimonial-author">- Mark Jackson</p>
+      </div>
+    </div>
+  </div>
+  
 
-<p><div class="content">
-  <p>Welcome to Rx Pharamas</p>
-  <p>Here we offer online consultations with certified doctors, we have excellent pharmacists to help you out with any medication right from the comfort of your houses.</p>
-  <p>Sign up for free today!</p>
-</div></p>
+  <div class="footer">
+    <div class="contact-us"id="contact-us">
+      <ul>
+        <li>Phone: +254 11223344 </li>
+        <li>Email: GoodHealth@gmail.com</li>
+        <li>Address: Westlands, Nairobi, Kenya</li>
+      </ul>
+      
+      <p>Follow us on social media:</p>
+      <ul>
+        <li>Instagram: @GoodHealth_Official</li>
+        <li>Facebook: GoodHealth_Official</li>
+        <li>Twitter: @GoodHealth_Tweets</li>
+        <li>YouTube: GoodHealth_Channel</li>
+      </ul>
+    </div>
+    <hr class="white-line"> <!-- Horizontal white line -->
+    <p>&copy; 2023 Good Health Pharmacy</p>
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms of Service</a>
+  </div>
 
-<p><div class="phone">
- <p><img src="call.png" width="50" height="50">Call us:0745797578/0732675367</p>
-  <p><img src="email.jpg" width="50" height="50">Email us: Rxpharma@gmail.com</p>
-</div></p>
+  <script type="text/javascript">
+    var myIndex = 0;
+    carousel();
+
+    function carousel() {
+      var i;
+      var x = document.getElementsByClassName("mySlide");
+      for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+      }
+      myIndex++;
+      if (myIndex > x.length) {
+        myIndex = 1;
+      }
+      x[myIndex - 1].style.display = "block";
+      setTimeout(carousel, 4000); // Change image every 4 seconds
+    }
+  </script>
 
 
 </body>

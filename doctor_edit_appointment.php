@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $patientResult = $conn->query($patientQuery);
 
     if ($patientResult->num_rows > 0) {
+      echo "<div class='card'>"; // Added a card div
       echo "<div class='user-info'>";
       echo "<h2>$fullName</h2>";
       echo "</div>";
@@ -65,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       echo "  window.location.href = 'doctor_view_appointments.php';";
       echo "}";
       echo "</script>";
+      echo "</div>"; // Close the card div
     } else {
       echo "Patient not found.";
     }
@@ -79,6 +81,18 @@ $conn->close();
 ?>
 
 <style>
+.card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  text-align: left;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid #ccc;
+  margin: 0 auto;
+}
+
 .user-info {
   text-align: center;
   margin-bottom: 20px;

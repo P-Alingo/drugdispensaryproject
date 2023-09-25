@@ -11,7 +11,7 @@ if (isset($_SESSION['email'])) {
     $fullName = $_SESSION['full_name'];
 
     echo "<div class='user-info'>";
-    echo "<h2>$fullName</h2>";
+    echo "<h2>  $fullName</h2>";
     echo "</div>";
 
     // Retrieve the doctor's details from the database
@@ -69,6 +69,56 @@ if (isset($_SESSION['email'])) {
                             font-weight: bold;
                             margin-bottom: 20px;
                         }
+                       
+                      
+                        input[type='text'],
+                        input[type='date'] {
+                            width: 200px;
+                            margin-bottom: 10px;
+                        }
+                        input[type='submit'],
+                        button {
+                            display: inline-block;
+                            padding: 8px 16px;
+                            background-color: black;
+                            color: white;
+                            text-decoration: none;
+                            border: none;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            margin-top: 10px;
+                        }
+                        button a {
+                            color: white;
+                            text-decoration: none;
+                        }
+                        body {
+                            background-image: url('doctorprescription.webp');
+                            background-size: cover;
+                            background-position: center;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center; /* Align items horizontally at the center */
+                            justify-content: center; /* Align items vertically at the center */
+                            height: 100vh;
+                            margin: 0;
+                        }
+                        .user-info {
+                            font-weight: bold;
+                            margin-bottom: 20px;
+                        }
+                        .card {
+                            background-color: white;
+                            padding: 20px;
+                            border-radius: 10px;
+                            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                            max-width: 400px;
+                            text-align: left;
+                            transition: transform 0.2s, box-shadow 0.2s;
+                            border: 1px solid #ccc;
+                            margin: 0 auto;
+                            margin-top: 20px;
+                        }
                         h1 {
                             font-size: 24px;
                             margin-bottom: 10px;
@@ -98,20 +148,27 @@ if (isset($_SESSION['email'])) {
                         button a {
                             color: white;
                             text-decoration: none;
-                        }body {
-                            background-image: url('doctorprescription.webp');
-                            background-size: cover;
-                            background-position: center;
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center; /* Align items horizontally at the center */
-                            justify-content: center; /* Align items vertically at the center */
-                            height: 100vh;
-                            margin: 0;
+                        }
+                        .back-button {
+                            background-color: black;
+                            color: white;
+                            padding: 14px 24px;
+                            font-size: 16px;
+                            border: none;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            margin-top: 10px;
+                            text-decoration: none;
+                            width: fit-content;
+                            display: inline-block;
+                        }
+                        .button-container {
+                            margin-top: 10px;
                         }
                     </style>";
 
-                // Display the prescription update form
+                // Display the prescription update form in a card
+                echo "<div class='card'>";
                 echo "<h1>Edit Prescription</h1>";
                 echo "<form method='POST' action=''>";
                 echo "<input type='hidden' name='prescription_id' value='$prescriptionID'>";
@@ -127,11 +184,13 @@ if (isset($_SESSION['email'])) {
                 echo "<input type='text' id='dosage' name='dosage' value='$dosage' required><br><br>";
                 echo "<label for='quantity'>Quantity:</label>";
                 echo "<input type='text' id='quantity' name='quantity' value='$quantity' required><br><br>";
+                echo "<div class='button-container'>";
                 echo "<input type='submit' value='Update Prescription'>";
-                echo "</form>";
-
-                // Back button
                 echo "<button onclick=\"window.location.href = 'doctor_view_prescription.php';\">Back</button>";
+                echo "</div>";
+                echo "</form>";
+                echo "</div>";
+
             } else {
                 echo "Prescription not found.";
             }
@@ -147,3 +206,5 @@ if (isset($_SESSION['email'])) {
 
 $conn->close();
 ?>
+
+

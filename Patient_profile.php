@@ -23,58 +23,75 @@ if (isset($_SESSION['email'])) {
     $full_Name = $_SESSION['full_name'];
     ?>
 
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <title>Patient Profile</title>
-      <style>
-        body {
-          background-image: url('patientprofile2.jpg'); /* Add the image as the background */
-          background-size: cover; /* Make the image fit the screen */
-          background-position: center; /* Center the background image */
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start; /* Align content to the left */
-          justify-content: center; /* Center the content vertically */
-          height: 100vh; /* Set the height of the body to fill the viewport */
-          padding: 20px;
-          font-family: Arial, sans-serif;
-        }
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Patient Profile</title>
+  <style>
+    body {
+      background-image: url('patientprofile2.jpg');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
 
-        .user-info {
-          font-weight: bold;
-          margin-bottom: 20px;
-          font-size: 45px; /* Increase the font size for the welcome message */
-        }
+    .user-info {
+      font-weight: bold;
+      margin-bottom: 20px;
+      font-size: 45px;
+      color: #333;
+    }
 
-        .user-details {
-          background-color: rgba(255, 255, 255, 0.7); /* Add a semi-transparent background for better readability */
-          padding: 40px;
-          border-radius: 8px;
-          max-width: 500px; /* Limit the width of the details section */
-        }
+    .user-details {
+      background-color: rgba(255, 255, 255, 0.7);
+      padding: 40px;
+      border-radius: 8px;
+      max-width: 500px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      text-align: left;
+      transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+    }
 
-        h1 {
-          font-size: 23px; /* Increase the font size for h1 elements */
-          margin-bottom: 10px;
-        }
+    .user-details:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      background-color: rgba(255, 255, 255, 0.9);
+    }
 
-        p {
-          margin-bottom: 5px;
-          font-size: 18px; /* Increase the font size for p elements */
-        }
+    h1 {
+      font-size: 23px;
+      margin-bottom: 10px;
+      color: #1E90FF;
+    }
 
-        .edit-profile-button,
+    p {
+      margin-bottom: 5px;
+      font-size: 18px;
+    }
+
+    .edit-profile-button,
     .back-button {
       display: inline-block;
-      padding: 8px 16px;
-      background-color: #1E90FF; /* Updated color to dark blue */
+      padding: 10px 20px;
+      background-color: #1E90FF;
       color: white;
       text-decoration: none;
       border: none;
       border-radius: 4px;
       cursor: pointer;
       margin-right: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    .edit-profile-button:hover,
+    .back-button:hover {
+      background-color: #007ACC;
     }
 
     .edit-profile-button a,
@@ -82,33 +99,33 @@ if (isset($_SESSION['email'])) {
       color: white;
       text-decoration: none;
     }
-      </style>
-    </head>
-    <body>
-      <div class="user-info">
-        Welcome, <?php echo $full_Name; ?>!
-      </div>
+  </style>
+</head>
+<body>
+  <div class="user-info">
+    Welcome, <?php echo $full_Name; ?>!
+  </div>
 
-      <div class="user-details">
-        <h1>Patient Profile</h1>
-        <p>SSN: <?php echo $row['SSN']; ?></p>
-        <p>Full Name: <?php echo $row['full_name']; ?></p>
-        <p>Gender: <?php echo $row['gender']; ?></p>
-        <p>Email: <?php echo $row['email']; ?></p>
-        <p>Password: <?php echo $row['PASSWORD']; ?></p>
-        <p>Date of Birth: <?php echo $row['date_of_birth']; ?></p>
-        <p>Age: <?php echo $row['age']; ?></p>
-        <p>Phone Number: <?php echo $row['phone_number']; ?></p>
-        <p>Address: <?php echo $row['address']; ?></p>
+  <div class="user-details">
+    <h1>Patient Profile</h1>
+    <p>SSN: <?php echo $row['SSN']; ?></p>
+    <p>Full Name: <?php echo $row['full_name']; ?></p>
+    <p>Gender: <?php echo $row['gender']; ?></p>
+    <p>Email: <?php echo $row['email']; ?></p>
+    <p>Password: <?php echo $row['PASSWORD']; ?></p>
+    <p>Date of Birth: <?php echo $row['date_of_birth']; ?></p>
+    <p>Age: <?php echo $row['age']; ?></p>
+    <p>Phone Number: <?php echo $row['phone_number']; ?></p>
+    <p>Address: <?php echo $row['address']; ?></p>
 
-        <!-- Provide an option to edit the profile -->
-        <button class="edit-profile-button"><a href='Patient_edit.php'>Edit Profile</a></button>
+    <!-- Provide an option to edit the profile -->
+    <button class="edit-profile-button"><a href='Patient_edit.php'>Edit Profile</a></button>
 
-        <!-- Add a "Back" button -->
-        <button class="back-button"><a href='Patientpage.php'>Back</a></button>
-      </div>
-    </body>
-    </html>
+    <!-- Add a "Back" button -->
+    <button class="back-button"><a href='Patientpage.php'>Back</a></button>
+  </div>
+</body>
+</html>
 
     <?php
   } else {

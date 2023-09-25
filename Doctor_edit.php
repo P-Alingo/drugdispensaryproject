@@ -1,167 +1,177 @@
-<?php
-require_once("connection.php");
+<!DOCTYPE html>
+<html>
 
-// Start the session
-session_start();
+<head>
+    <title>Doctor Profile</title>
+    <style>
+        body {
+            background-image: url('doctorprofile.webp');
+            /* Add the image as the background */
+            background-size: cover;
+            /* Make the image fit the screen */
+            background-position: center;
+            /* Center the background image */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* Center content horizontally */
+            justify-content: center;
+            /* Center the content vertically */
+            height: 100vh;
+            /* Set the height of the body to fill the viewport */
+            margin: 0;
+        }
 
-// Check if the 'email' key is set in the session
-if (isset($_SESSION['email'])) {
-  // Retrieve the doctor's email from the session
-  $email = $_SESSION['email'];
-  $fullName = $_SESSION['full_name'];
+        .user-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-  // Retrieve the doctor's details from the database
-  $query = "SELECT * FROM doctor WHERE email='$email'";
-  $result = $conn->query($query);
+        .user-info h2 {
+            color: #333;
+        }
 
-  if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
+        .edit-profile-container {
+            margin: 20px auto;
+            width: 100%; /* Adjust the width to 100% */
+            max-width: 600px; /* Set a maximum width to maintain proportions */
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            /* Add a white background */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
-    // Display the edit profile form
-    echo "<div class='user-info'>";
-    echo "<h2>$fullName</h2>";
-    echo "</div>";
+        .edit-profile-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
 
-    echo "<div class='edit-profile-container'>";
-    echo "<h1>Edit Profile</h1>";
-    echo "<p>Welcome, $fullName!</p>"; // Add the user's name to the content container
-    echo "<form class='edit-profile-form' method=\"POST\" action=\"Doctor_update.php\">";
-    echo "<label for=\"fullName\">Full Name:</label>";
-    echo "<input type=\"text\" id=\"fullName\" name=\"fullName\" value=\"" . $row['full_name'] . "\" required><br><br>";
+        .edit-profile-form input[type="text"],
+        .edit-profile-form input[type="email"],
+        .edit-profile-form input[type="password"],
+        .edit-profile-form input[type="date"],
+        .edit-profile-form input[type="tel"],
+        .edit-profile-form select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
 
-    echo "<label for=\"gender\">Gender:</label>";
-    echo "<select id=\"gender\" name=\"gender\">";
-    echo "<option value=\"male\" " . ($row['gender'] === 'male' ? 'selected' : '') . ">Male</option>";
-    echo "<option value=\"female\" " . ($row['gender'] === 'female' ? 'selected' : '') . ">Female</option>";
-    echo "<option value=\"not_mention\" " . ($row['gender'] === 'not_mention' ? 'selected' : '') . ">Not Mention</option>";
-    echo "</select><br><br>";
+        .edit-profile-form select {
+            height: 38px;
+        }
 
-    echo "<label for=\"specialization\">Specialization:</label>";
-    echo "<input type=\"text\" id=\"specialization\" name=\"specialization\" value=\"" . $row['specialization'] . "\" required><br><br>";
+        .update-profile-button,
+        .back-button {
+            padding: 8px 12px;
+            background-color: #0074e4; /* Blue background color */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
-    echo "<label for=\"yearsOfExperience\">Years of Experience:</label>";
-    echo "<input type=\"number\" id=\"yearsOfExperience\" name=\"yearsOfExperience\" value=\"" . $row['years_of_experience'] . "\" required><br><br>";
+        .update-profile-button:hover,
+        .back-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
 
-    echo "<label for=\"email\">Email:</label>";
-    echo "<input type=\"email\" id=\"email\" name=\"email\" value=\"" . $row['email'] . "\" required><br><br>";
+        .back-button a {
+            text-decoration: none;
+            color: white;
+        }
 
-    echo "<label for=\"password\">Password:</label>";
-    echo "<input type=\"password\" id=\"password\" name=\"password\" value=\"" . $row['password'] . "\" required><br><br>";
+        /* Arrange buttons inline */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
 
-    echo "<label for=\"dateOfBirth\">Date of Birth:</label>";
-    echo "<input type=\"date\" id=\"dateOfBirth\" name=\"dateOfBirth\" value=\"" . $row['Date_of_birth'] . "\" required><br><br>";
+<body>
+    <?php
+    require_once("connection.php");
 
-    echo "<label for=\"phoneNumber\">Phone Number:</label>";
-    echo "<input type=\"tel\" id=\"phoneNumber\" name=\"phoneNumber\" value=\"" . $row['phone_number'] . "\" required><br><br>";
+    // Start the session
+    session_start();
 
-    echo "<label for=\"address\">Address:</label>";
-    echo "<input type=\"text\" id=\"address\" name=\"address\" value=\"" . $row['address'] . "\" required><br><br>";
+    // Check if the 'email' key is set in the session
+    if (isset($_SESSION['email'])) {
+        // Retrieve the doctor's email from the session
+        $email = $_SESSION['email'];
+        $fullName = $_SESSION['full_name'];
 
-    echo "<input class=\"update-profile-button\" type=\"submit\" value=\"Update Profile\">";
-    echo "</form>";
+        // Retrieve the doctor's details from the database
+        $query = "SELECT * FROM doctor WHERE email='$email'";
+        $result = $conn->query($query);
 
-    // Add a back button
-    echo "<button class=\"back-button\" onclick=\"window.location.href='Doctor_profile.php'\">Back</button>";
-    echo "</div>";
-  } else {
-    echo "Doctor not found.";
-  }
-} else {
-  echo "Invalid session. Please login again.";
-}
-?>
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
 
-<style>
-  body {
-    background-image: url('doctorprofile.webp');
-    /* Add the image as the background */
-    background-size: cover;
-    /* Make the image fit the screen */
-    background-position: center;
-    /* Center the background image */
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    /* Align content to the left */
-    justify-content: center;
-    /* Center the content vertically */
-    height: 100vh;
-    /* Set the height of the body to fill the viewport */
-  }
+            // Display the edit profile form
+            echo "<div class='user-info'>";
+            echo "<h2>$fullName</h2>";
+            echo "</div>";
 
-  .user-info {
-    text-align: center;
-    margin-bottom: 20px;
-  }
+            echo "<div class='edit-profile-container'>";
+            echo "<h1>Edit Profile</h1>";
+            echo "<p>Welcome, $fullName!</p>"; // Add the user's name to the content container
+            echo "<form class='edit-profile-form' method=\"POST\" action=\"Doctor_update.php\">";
+            echo "<label for=\"fullName\">Full Name:</label>";
+            echo "<input type=\"text\" id=\"fullName\" name=\"fullName\" value=\"" . $row['full_name'] . "\" required><br><br>";
 
-  .user-info h2 {
-    color: #333;
-  }
+            echo "<label for=\"gender\">Gender:</label>";
+            echo "<select id=\"gender\" name=\"gender\">";
+            echo "<option value=\"male\" " . ($row['gender'] === 'male' ? 'selected' : '') . ">Male</option>";
+            echo "<option value=\"female\" " . ($row['gender'] === 'female' ? 'selected' : '') . ">Female</option>";
+            echo "<option value=\"not_mention\" " . ($row['gender'] === 'not_mention' ? 'selected' : '') . ">Not Mention</option>";
+            echo "</select><br><br>";
 
-  .edit-profile-container {
-    margin: 20px auto;
-    width: 500px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #fff;
-    /* Add a white background */
-  }
+            echo "<label for=\"specialization\">Specialization:</label>";
+            echo "<input type=\"text\" id=\"specialization\" name=\"specialization\" value=\"" . $row['specialization'] . "\" required><br><br>";
 
-  .edit-profile-form label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #333;
-  }
+            echo "<label for=\"yearsOfExperience\">Years of Experience:</label>";
+            echo "<input type=\"number\" id=\"yearsOfExperience\" name=\"yearsOfExperience\" value=\"" . $row['years_of_experience'] . "\" required><br><br>";
 
-  .edit-profile-form input[type="text"],
-  .edit-profile-form input[type="email"],
-  .edit-profile-form input[type="password"],
-  .edit-profile-form input[type="date"],
-  .edit-profile-form input[type="tel"],
-  .edit-profile-form select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 10px;
-  }
+            echo "<label for=\"email\">Email:</label>";
+            echo "<input type=\"email\" id=\"email\" name=\"email\" value=\"" . $row['email'] . "\" required><br><br>";
 
-  .edit-profile-form select {
-    height: 38px;
-  }
+            echo "<label for=\"password\">Password:</label>";
+            echo "<input type=\"password\" id=\"password\" name=\"password\" value=\"" . $row['password'] . "\" required><br><br>";
 
-  .edit-profile-form .update-profile-button {
-    padding: 8px 12px;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+            echo "<label for=\"dateOfBirth\">Date of Birth:</label>";
+            echo "<input type=\"date\" id=\"dateOfBirth\" name=\"dateOfBirth\" value=\"" . $row['Date_of_birth'] . "\" required><br><br>";
 
-  .edit-profile-form .update-profile-button:hover {
-    background-color: #555;
-  }
+            echo "<label for=\"phoneNumber\">Phone Number:</label>";
+            echo "<input type=\"tel\" id=\"phoneNumber\" name=\"phoneNumber\" value=\"" . $row['phone_number'] . "\" required><br><br>";
 
-  .back-button {
-    padding: 8px 12px;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
+            echo "<label for=\"address\">Address:</label>";
+            echo "<input type=\"text\" id=\"address\" name=\"address\" value=\"" . $row['address'] . "\" required><br><br>";
 
-  .back-button:hover {
-    background-color: #555;
-  }
+            // Buttons arranged inline
+            echo "<div class='button-container'>";
+            echo "<button class=\"update-profile-button\" type=\"submit\">Update Profile</button>";
 
-  .back-button a {
-    text-decoration: none;
-    color: #fff;
-  }
-</style>
+            // Back button with a link
+            echo "<button class=\"back-button\"><a href='Doctor_profile.php'>Back</a></button>";
+            echo "</div>";
 
+            echo "</form>";
+            echo "</div>";
+        } else {
+            echo "Doctor not found.";
+        }
+    } else {
+        echo "Invalid session. Please login again.";
+    }
+    ?>
+</body>
+
+</html>

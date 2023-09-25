@@ -1,5 +1,6 @@
 <?php
-require_once("connection.php");
+// Include the connection file
+require_once "connection.php";
 
 // Retrieve the submitted email and password
 $email = $_POST['email'];
@@ -18,6 +19,10 @@ if ($result->num_rows > 0) {
   // Set the 'email' value in the session
   $_SESSION['email'] = $row['email'];
 
+   // Set the 'email' and 'full_name' in the session
+   $_SESSION['email'] = $row['email'];
+   $_SESSION['full_name'] = $row['full_name'];
+   
   // Redirect to patientpage.php if the credentials are correct
   header("Location: patientpage.php");
   exit();
@@ -27,6 +32,7 @@ if ($result->num_rows > 0) {
   exit();
 }
 
-$conn->close();
+//$conn->close();
 ?>
+
 

@@ -1,22 +1,40 @@
 <?php
-require_once("connection.php");
+require_once("connection.php"); // Include your database connection code here
 
-// Check if the prescription ID is provided
-if (isset($_POST['prescription_id'])) {
-    $prescriptionId = $_POST['prescription_id'];
+// Handle prescription retrieval
+if (isset($_GET['patient'])) {
+    $selectedPatient = $_GET['patient'];
 
-    // Prepare the SQL statement to retrieve the prescription details
-    $query = "SELECT * FROM prescription WHERE prescription_id = '$prescriptionId'";
-    $result = $conn->query($query);
+    // Query to fetch prescription details
+    $query = "SELECT prescription_id, drug_id, patient_SSN, patient_full_name,  doctor_SSN, doctor_full_name, trace_name, date, dosage, quantity, price
+            FROM prescription
+            WHERE patient_SSN = ?"; // Use a parameterized query
 
-    // Check if the prescription is found
-    if ($result && $result->num_rows > 0) {
-        $prescriptionDetails = $result->fetch_assoc();
+    // Prepare the statement
+    $stmt = $conn->prepare($query);
 
-        // Send the response as JSON
-        echo json_encode($prescriptionDetails);
+    if ($stmt) {
+        $stmt->bind_param("s", $selectedPatient); // Bind the parameter
+        $stmt->execute();
+
+        // Get the result
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $prescriptionRow = $result->fetch_assoc();
+
+            // Return prescription details as JSON
+            echo json_encode($prescriptionRow);
+        } else {
+            echo json_encode(['error' => 'Prescription not found']);
+        }
+
+        $stmt->close(); // Close the statement
+    } else {
+        echo json_encode(['error' => 'Error preparing statement']);
     }
 }
 
-$conn->close();
+
+
 ?>

@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   if ($checkResult->num_rows > 0) {
     // User is already registered
     $conn->close();
-    header("Location: http://localhost/practicephp/Patient_Signup.html?message=already_registered");
+    header("Location: http://localhost/myproject/drugdispensaryproject/Patient_login.html?message=already_registered");
     exit();
   }
 
@@ -30,14 +30,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
   // Execute the query
   if ($conn->query($query) === TRUE) {
-    // Patient data saved successfully
-    $conn->close();
-    header("Location: http://localhost/practicephp/Patient_login.html");
+    // Start the session
+    session_start();
+
+    // Set the 'email' and 'full_name' in the session
+    $_SESSION['email'] = $email;
+    $_SESSION['full_name'] = $full_name;
+
+    // After successful registration
+    $_SESSION['registration_success'] = true;
+
+    // Redirect to patientpage.php
+    header("Location: http://localhost/myproject/drugdispensaryproject/patientpage.php");
     exit();
   } else {
     echo "Error: " . $conn->error;
   }
-}
+} 
 
 // Close the database connection
 $conn->close();

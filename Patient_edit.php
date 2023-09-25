@@ -26,7 +26,6 @@ if (isset($_SESSION['email'])) {
     $phoneNumber = $patientRow['phone_number'];
     $address = $patientRow['address'];
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,14 +47,22 @@ if (isset($_SESSION['email'])) {
       margin-bottom: 10px;
     }
 
-    form {
-      margin-top: 20px;
+    .card {
       background-color: rgba(255, 255, 255, 0.7); /* Add a semi-transparent background for better readability */
       padding: 40px;
       border-radius: 8px;
-      max-width: 900px; /* Increased width to 900px */
-      /* Adjust the margin to center the form horizontally */
+      max-width: 800px; /* Increased width to 900px */
+      /* Adjust the margin to center the card horizontally */
       margin: 20px auto;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      text-align: left;
+      transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      background-color: rgba(255, 255, 255, 0.9);
     }
 
     /* Adjust the styles for text fields to make them wider */
@@ -103,17 +110,18 @@ if (isset($_SESSION['email'])) {
 </head>
 <body>
   <h1>Edit Patient Information</h1>
-  <div style='text-align: center; font-size: 45px; margin-bottom: 20px;'> 
-    Welcome, <?php echo $fullName; ?>!
-  </div>
-  <form method='POST' action='patient_update.php'>
-    <label for='fullName'>Full Name:</label>
-    <div class='content-container'>
+  <div class="card">
+    <div style='text-align: center; font-size: 45px; margin-bottom: 20px;'> 
+      Welcome, <?php echo $fullName; ?>!
+    </div>
+    <form method='POST' action='patient_update.php'>
+      <label for='fullName'>Full Name:</label>
       <input type='text' id='fullName' name='fullName' value='<?php echo $fullName; ?>' required><br>
       <label for='gender'>Gender:</label>
       <select id='gender' name='gender' required>
         <option value='Male' <?php echo ($gender === 'Male') ? 'selected' : ''; ?>>Male</option>
         <option value='Female' <?php echo ($gender === 'Female') ? 'selected' : ''; ?>>Female</option>
+        <option value='Other' <?php echo ($gender === 'Other') ? 'selected' : ''; ?>>Other</option>
       </select><br>
       <label for='email'>Email:</label>
       <input type='email' id='email' name='email' value='<?php echo $email; ?>' required><br>
@@ -129,10 +137,11 @@ if (isset($_SESSION['email'])) {
       <textarea id='address' name='address' required><?php echo $address; ?></textarea><br>
       <input type='submit' value='Update Information'>
       <button><a href='Patient_profile.php'>Back</a></button>
-    </div>
-  </form>
+    </form>
+  </div>
 </body>
 </html>
+
 
 <?php
     } else {

@@ -1,238 +1,287 @@
-<?php
-require_once("connection.php");
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pharmacist Dispense</title>
+</head>
+<body>
+    <?php
+    require_once("connection.php"); // Include your database connection code here
 
-// Start the session
-session_start();
+    // Start the session
+    session_start();
 
-// Check if the 'email' key is set in the session
-if (isset($_SESSION['email'])) {
-  // Retrieve the pharmacist's email from the session
-  $email = $_SESSION['email'];
+    // Check if the 'email' key is set in the session
+    if (isset($_SESSION['email'])) {
+        // Retrieve the pharmacist's email from the session
+        $email = $_SESSION['email'];
 
-  // Get the pharmacist's full name
-  $query = "SELECT full_name FROM pharmacist WHERE email = '$email'";
-  $result = $conn->query($query);
+        // Get the pharmacist's full name
+        $query = "SELECT full_name FROM pharmacist WHERE email = '$email'";
+        $result = $conn->query($query);
 
-  if ($result !== false && $result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $fullName = $row['full_name'];
+        if ($result !== false && $result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $fullName = $row['full_name'];
 
-    // Display the pharmacist's full name
-    echo "<h2>Welcome, $fullName</h2>";
-    if (isset($_GET['search'])) {
-      $search = $_GET['search'];
-
-      $query = "SELECT prescription_id, drug_id, patient_SSN, patient_full_name, doctor_SSN, doctor_full_name, trace_name, date, dosage, quantity
-                FROM view_prescription
-                WHERE patient_SSN LIKE '%$search%' OR patient_full_name LIKE '%$search%'";
-      $result = $conn->query($query);
+            // Fetch a list of patients from the prescription table
+            $query = "SELECT DISTINCT patient_SSN, patient_full_name FROM prescription";
+            $result = $conn->query($query);
+        } else {
+            echo "Pharmacist not found.";
+        }
     } else {
-      $query = "SELECT prescription_id, drug_id, patient_SSN, patient_full_name, doctor_SSN, doctor_full_name, trace_name, date, dosage, quantity
-                FROM view_prescription";
-      $result = $conn->query($query);
+        echo "Invalid session. Please login again.";
+    }
+    ?>
+
+    <h2>Welcome, <?php echo $fullName; ?></h2> <!-- Display the pharmacist's name -->
+
+    <div class="card-container">
+        <h1>Pharmacist Dispense Drugs</h1>
+
+        <form id="dispense-form">
+            <label for="patient">Select a Patient:</label>
+            <select name="patient" id="patient">
+                <option value="">Select Patient</option>
+                <?php
+                if ($result && $result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<option value="' . $row['patient_SSN'] . '">' . $row['patient_full_name'] . '</option>';
+                    }
+                }
+                ?>
+            </select>
+
+            <!-- Prescription details input fields -->
+            <div class="input-group">
+                <label for="prescription_id">Prescription ID:</label>
+                <input type="text" name="prescription_id" id="prescription_id">
+            </div>
+
+            <div class="input-group">
+                <label for="drug_id">Drug ID:</label>
+                <input type="text" name="drug_id" id="drug_id">
+            </div>
+
+            <div class="input-group">
+                <label for="patient_full_name">Patient Full Name:</label>
+                <input type="text" name="patient_full_name" id="patient_full_name">
+            </div>
+
+            <div class="input-group">
+                <label for="patient_SSN">Patient SSN:</label>
+                <input type="text" name="patient_SSN" id="patient_SSN">
+            </div>
+
+
+            <div class="input-group">
+                <label for="doctor_full_name">Doctor Full Name:</label>
+                <input type="text" name="doctor_full_name" id="doctor_full_name">
+            </div>
+
+            <div class="input-group">
+                <label for="doctor_SSN">Doctor SSN:</label>
+                <input type="text" name="doctor_SSN" id="doctor_SSN">
+            </div>
+
+            <div class="input-group">
+                <label for="trace_name">Trace Name:</label>
+                <input type="text" name="trace_name" id="trace_name">
+            </div>
+
+            <div class="input-group">
+                <label for="date">Date:</label>
+                <input type="text" name="date" id="date">
+            </div>
+
+            <div class="input-group">
+                <label for="dosage">Dosage:</label>
+                <input type="text" name="dosage" id="dosage">
+            </div>
+
+            <div class="input-group">
+                <label for="quantity">Quantity:</label>
+                <input type="text" name="quantity" id="quantity">
+            </div>
+
+            <div class="input-group">
+                <label for="price">Price:</label>
+                <input type="text" name="price" id="price">
+            </div>
+
+            <div class="button-group">
+           
+<button type="button" class="indigo-button" name="Fill Details" onclick="autoFillPrescriptionDetails()">Fill Details</button>
+
+            <button type="button" class="indigo-button" name="dispense" onclick="autoFillPrescriptionDetails(); dispenseDrug();">Dispense Drug</button>
+
+                <a href='pharmacistpage.php' class='indigo-button back-button'>Back</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+     // Modify the autoFillPrescriptionDetails() function
+function autoFillPrescriptionDetails() {
+    const selectedPatient = document.getElementById("patient").value;
+
+    if (selectedPatient === "") {
+        alert("Please select a patient.");
+        return;
     }
 
-    if ($result !== false && $result->num_rows > 0) {
-      echo "<h1>Select a Patient</h1>";
-      echo "<form method='POST' action=''>";
-      echo "<select name='patient'>";
+    // Make an AJAX request to fetch prescription details
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `get_prescription_details.php?patient=${selectedPatient}`, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
 
-      $result->data_seek(0);
-      while ($row = $result->fetch_assoc()) {
-        echo "<option value='" . $row['patient_SSN'] . "'>" . $row['patient_full_name'] . "</option>";
-      }
-
-      echo "</select>";
-      echo "<input type='submit' value='View Prescription'>";
-      echo "</form>";
-
-      if (isset($_POST['patient'])) {
-        $selectedPatient = $_POST['patient'];
-
-        $prescriptionQuery = "SELECT prescription_id, drug_id, patient_SSN, patient_full_name, doctor_SSN, doctor_full_name, trace_name, date, dosage, quantity
-                              FROM view_prescription
-                              WHERE patient_SSN = '$selectedPatient'";
-        $prescriptionResult = $conn->query($prescriptionQuery);
-
-        if ($prescriptionResult !== false && $prescriptionResult->num_rows > 0) {
-          echo "<h2>Selected Patient's Prescription Details</h2>";
-          echo "<table>";
-          echo "<tr><th>Prescription ID</th><th>Drug ID</th><th>Patient SSN</th><th>Patient Full Name</th><th>Doctor SSN</th><th>Doctor Full Name</th><th>Trace Name</th><th>Date</th><th>Dosage</th><th>Quantity</th></tr>";
-
-          while ($prescriptionRow = $prescriptionResult->fetch_assoc()) {
-            echo "<tr>";
-            echo "<td>" . $prescriptionRow['prescription_id'] . "</td>";
-            echo "<td>" . $prescriptionRow['drug_id'] . "</td>";
-            echo "<td>" . $prescriptionRow['patient_SSN'] . "</td>";
-            echo "<td>" . $prescriptionRow['patient_full_name'] . "</td>";
-            echo "<td>" . $prescriptionRow['doctor_SSN'] . "</td>";
-            echo "<td>" . $prescriptionRow['doctor_full_name'] . "</td>";
-            echo "<td>" . $prescriptionRow['trace_name'] . "</td>";
-            echo "<td>" . $prescriptionRow['date'] . "</td>";
-            echo "<td>" . $prescriptionRow['dosage'] . "</td>";
-            echo "<td>" . $prescriptionRow['quantity'] . "</td>";
-            echo "</tr>";
-          }
-
-          echo "</table>";
-
-          // Dispense Drug form
-          echo "<h1>Dispense Drugs</h1>";
-          echo "<form action=\"\" method=\"post\">";
-          echo "<input type=\"hidden\" name=\"patient\" value=\"$selectedPatient\">";
-          echo "Prescription ID: <input type=\"text\" name=\"prescription_id\"><br>";
-          echo "Drug ID: <input type=\"text\" name=\"drug_id\"><br>";
-          echo "Patient SSN: <input type=\"text\" name=\"patient_SSN\"><br>";
-          echo "Patient Full Name: <input type=\"text\" name=\"patient_full_name\"><br>";
-          echo "Doctor SSN: <input type=\"text\" name=\"doctor_SSN\"><br>";
-          echo "Doctor Full Name: <input type=\"text\" name=\"doctor_full_name\"><br>";
-          echo "Trace Name: <input type=\"text\" name=\"trace_name\"><br>";
-          echo "Date: <input type=\"text\" name=\"date\"><br>";
-          echo "Dosage: <input type=\"text\" name=\"dosage\"><br>";
-          echo "Quantity: <input type=\"text\" name=\"quantity\"><br>";
-          echo "Price: <input type=\"text\" name=\"price\"><br>";
-          echo "<button type=\"submit\" class=\"indigo-button\" name=\"dispense\">Dispense Drug</button>";
-          echo "</form>";
-        } else {
-          echo "No prescription found for the selected patient.";
-        }
-      }
-
-      // Check if the dispense form is submitted
-      if (isset($_POST['dispense'])) {
-        $selectedPatient = $_POST['patient'];
-
-        // Get the patient's prescription details
-        $prescriptionQuery = "SELECT prescription_id, drug_id, patient_SSN, patient_full_name, doctor_SSN, doctor_full_name, trace_name, date, dosage, quantity
-                              FROM view_prescription
-                              WHERE patient_SSN = '$selectedPatient'";
-        $prescriptionResult = $conn->query($prescriptionQuery);
-
-        if ($prescriptionResult !== false && $prescriptionResult->num_rows > 0) {
-          $prescriptionRow = $prescriptionResult->fetch_assoc();
-
-          $prescriptionID = $prescriptionRow['prescription_id'];
-          $drugID = $prescriptionRow['drug_id'];
-          $patientSSN = $prescriptionRow['patient_SSN'];
-          $patientFullName = $prescriptionRow['patient_full_name'];
-          $doctorSSN = $prescriptionRow['doctor_SSN'];
-          $doctorFullName = $prescriptionRow['doctor_full_name'];
-          $traceName = $prescriptionRow['trace_name'];
-          $date = $prescriptionRow['date'];
-          $dosage = $prescriptionRow['dosage'];
-          $quantity = $prescriptionRow['quantity'];
-          $price = $_POST['price'];
-
-          // Check if any required field is empty
-          if (empty($prescriptionID) || empty($drugID) || empty($patientSSN) || empty($patientFullName) || empty($doctorSSN) || empty($doctorFullName) || empty($traceName) || empty($date) || empty($dosage) || empty($quantity) || empty($price)) {
-            echo "Please fill in all the required fields.";
-          } else {
-            // Check if the drug is already dispensed for the prescription
-            $checkQuery = "SELECT * FROM drug_dispense WHERE prescription_id = '$prescriptionID' AND drug_id = '$drugID'";
-            $checkResult = $conn->query($checkQuery);
-
-            if ($checkResult !== false && $checkResult->num_rows > 0) {
-              echo "This drug has already been dispensed for the selected prescription.";
+            if (response.error) {
+                alert("Error: " + response.error);
             } else {
-              // Insert the drug dispense details into the database
-              $insertQuery = "INSERT INTO drug_dispense (prescription_id, drug_id, patient_SSN, patient_full_name, doctor_SSN, doctor_full_name, trace_name, date, dosage, quantity, price) VALUES ('$prescriptionID', '$drugID', '$patientSSN', '$patientFullName', '$doctorSSN', '$doctorFullName', '$traceName', '$date', '$dosage', '$quantity', '$price')";
-              $insertResult = $conn->query($insertQuery);
+                // Populate the textboxes with prescription details
+                document.getElementById("prescription_id").value = response.prescription_id;
+                document.getElementById("drug_id").value = response.drug_id;
+                document.getElementById("patient_full_name").value = response.patient_full_name;
+                document.getElementById("doctor_full_name").value = response.doctor_full_name;
+                document.getElementById("trace_name").value = response.trace_name;
+                document.getElementById("date").value = response.date;
+                document.getElementById("dosage").value = response.dosage;
+                document.getElementById("quantity").value = response.quantity;
+                document.getElementById("price").value = response.price;
 
-              if ($insertResult === true) {
-                echo "Drug dispensed successfully.";
-              } else {
-                echo "Error dispensing drug: " . $conn->error;
-              }
+                // Autofill patient_SSN and doctor_SSN
+                document.getElementById("patient_SSN").value = response.patient_SSN;
+                document.getElementById("doctor_SSN").value = response.doctor_SSN;
             }
-          }
-        } else {
-          echo "No prescription found for the selected patient.";
         }
-      }
-
-      // Display the back button
-      echo "<form method='GET' action='pharmacistpage.php'>";
-      echo "<input type='submit' value='Back' class='indigo-button'>";
-      echo "</form>";
-    } else {
-      echo "No prescriptions found.";
-    }
-  } else {
-    echo "Pharmacist not found.";
-  }
-} else {
-  echo "Invalid session. Please login again.";
+    };
+    xhr.send();
 }
 
-$conn->close();
-?>
 
-<style>
-  h2 {
-    color: #333;
-  }
 
-  h1 {
-    color: #333;
-    margin-bottom: 10px;
-  }
+        function dispenseDrug() {
+            // Get the values from the form
+            const prescriptionID = document.getElementById("prescription_id").value;
+            const drugID = document.getElementById("drug_id").value;
+            const patientFullName = document.getElementById("patient_full_name").value;
+            const patientSSN = document.getElementById("patient_SSN").value;
+            const doctorFullName = document.getElementById("doctor_full_name").value;
+            const doctorSSN = document.getElementById("doctor_SSN").value;
+            const traceName = document.getElementById("trace_name").value;
+            const date = document.getElementById("date").value;
+            const dosage = document.getElementById("dosage").value;
+            const quantity = document.getElementById("quantity").value;
+            const price = document.getElementById("price").value;
 
-  form {
-    margin-bottom: 10px;
-  }
+            // Create a FormData object to send the data
+            const formData = new FormData();
+            formData.append("prescription_id", prescriptionID);
+            formData.append("drug_id", drugID);
+            formData.append("patient_full_name", patientFullName);
+            formData.append("patient_SSN", patientSSN);
+            formData.append("doctor_full_name", doctorFullName);
+            formData.append("doctor_SSN", doctorSSN);
+            formData.append("trace_name", traceName);
+            formData.append("date", date);
+            formData.append("dosage", dosage);
+            formData.append("quantity", quantity);
+            formData.append("price", price);
 
-  input[type='text'] {
-    padding: 8px;
-    width: 250px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-  }
+            // Send an AJAX request to insert data into drug_dispense table
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "insert_drug_dispense.php", true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        alert("Drug dispensed successfully!");
+                    } else {
+                        alert("Error dispensing drug: " + response.error);
+                    }
+                }
+            };
+            xhr.send(formData);
+        }
+    </script>
 
-  .indigo-button {
-    display: inline-block;
-    padding: 8px 16px;
-    background-color: indigo;
-    color: white;
-    text-decoration: none;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 10px;
-  }
+    <style>
+      h2 {
+        color: #333;
+      }
 
-  .indigo-button:hover {
-    background-color: #4b0082;
-  }
+      h1 {
+        color: #333;
+        margin-bottom: 10px;
+      }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 10px;
-  }
+      .card-container {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
 
-  th, td {
-    padding: 8px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
+      .input-group {
+        margin-bottom: 10px;
+      }
 
-  th {
-    background-color: #f2f2f2;
-  }
-  body {
-    background-image: url('pharmacistdispense.jpg'); /* Add the image as the background */
-      background-size: cover; /* Make the image fit the screen */
-      background-position: center; /* Center the background image */
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    text-align: center;
-    padding-top: 150px;
-    background-color: #f2f2f2;
-    margin: 0;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
-</style>
+      label {
+        font-weight: bold;
+      }
+
+      input[type='text'] {
+        padding: 8px;
+        width: 250px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      }
+
+      .button-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .indigo-button {
+        flex: 1;
+        padding: 8px 16px;
+        background-color: indigo;
+        color: white;
+        text-decoration: none;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+
+      .indigo-button:hover {
+        background-color: #4b0082;
+      }
+
+      .back-button {
+        flex: 1;
+      }
+
+      body {
+        background-image: url('pharmacistdispense.jpg'); /* Add the image as the background */
+        background-size: cover; /* Make the image fit the screen */
+        background-position: center; /* Center the background image */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        text-align: center;
+        padding-top: 20px;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+      }
+    </style>
+</body>
+</html>

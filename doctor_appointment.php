@@ -49,68 +49,159 @@ if (isset($_SESSION['email'])) {
                 echo "Selected patient not found.";
             }
         }
+        ?>
 
-        // Retrieve the list of patients from the database
-        $patientQuery = "SELECT SSN, full_name FROM patient";
-        $patientResult = $conn->query($patientQuery);
+        <!DOCTYPE html>
+        <html>
 
-        // Check if there are patients available
-        if ($patientResult->num_rows > 0) {
-            echo "<div class='user-info'>";
-            echo "<h2>$fullName</h2>";
-            echo "</div>";
+        <head>
+            <title>Doctor Dashboard</title>
+            <style>
+                body {
+                    background-image: url('doctorappointment.webp');
+                    background-size: cover;
+                    background-position: center;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100vh;
+                    margin: 0;
+                }
 
-            echo "<div class='appointment-container'>";
-            echo "<h1>Add Appointment</h1>";
+                .card {
+                    background-color: white;
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    max-width: 400px;
+                    text-align: left;
+                    transition: transform 0.2s, box-shadow 0.2s;
+                    border: 1px solid #ccc;
+                    margin: 0 auto;
+                }
 
-            // Generate the dropdown list
-            echo "<form class='appointment-form' method='post' action='doctor_appointment.php'>";
-            echo "<label for='patient'>Select Patient:</label>";
-            echo "<select name='patient' id='patient'>";
+                .card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                }
 
-            // Iterate over the patients and populate the dropdown list
-            while ($patientRow = $patientResult->fetch_assoc()) {
-                $ssn = $patientRow['SSN'];
-                $fullName = $patientRow['full_name'];
-                echo "<option value='$ssn'>$ssn - $fullName</option>";
-            }
+                .user-info {
+                    text-align: center;
+                    margin-bottom: 20px;
+                }
 
-            echo "</select>";
-            echo "<br>";
+                .user-info h2 {
+                    color: #333;
+                }
 
-            // Appointment input fields
-            echo "<label for='appointment_date'>Appointment Date:</label>";
-            echo "<input type='date' name='appointment_date' id='appointment_date' class='field' required>";
-            echo "<br>";
-            echo "<label for='appointment_time'>Appointment Time:</label>";
-            echo "<input type='time' name='appointment_time' id='appointment_time' class='field' required>";
-            echo "<br>";
-            echo "<label for='appointment_purpose'>Appointment Purpose:</label>";
-            echo "<input type='text' name='appointment_purpose' id='appointment_purpose' class='field' required>";
-            echo "<br>";
-            echo "<input type='submit' value='Add Appointment' class='add-appointment-button'>";
-            echo "</form>";
+                .appointment-container {
+                    text-align: center;
+                    margin-top: 20px;
+                }
 
-            // View Appointments button
-            echo "<button class='view-appointments-button' onclick='viewAppointments()'>View Appointments</button>";
-            echo "<script>";
-            echo "function viewAppointments() {";
-            echo "  window.location.href = 'doctor_view_appointments.php';";
-            echo "}";
-            echo "</script>";
+                .appointment-form {
+                    display: inline-block;
+                    text-align: left;
+                    margin-bottom: 10px;
+                }
 
-            // Back button
-            echo "<button class='back-button' onclick='goBack()'>Back</button>";
-            echo "<script>";
-            echo "function goBack() {";
-            echo "  window.location.href = 'doctorpage.php';";
-            echo "}";
-            echo "</script>";
+                .appointment-form label {
+                    display: block;
+                    margin-bottom: 5px;
+                    font-weight: bold;
+                    color: #333;
+                }
 
-            echo "</div>"; // Close the appointment-container div
-        } else {
-            echo "No patients found.";
-        }
+                .appointment-form select,
+                .appointment-form input[type="text"],
+                .appointment-form input[type="date"],
+                .appointment-form input[type="time"] {
+                    width: 100%;
+                    padding: 8px;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    margin-bottom: 10px;
+                }
+
+                .add-appointment-button,
+                .view-appointments-button,
+                .back-button {
+                    display: block;
+                    width: 150px;
+                    padding: 8px 12px;
+                    background-color: #333;
+                    color: #fff;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    margin: 5px auto;
+                }
+
+                .add-appointment-button:hover,
+                .view-appointments-button:hover,
+                .back-button:hover {
+                    background-color: #555;
+                }
+            </style>
+        </head>
+
+        <body>
+            <div class='card'>
+                <div class='user-info'>
+                    <h2><?php echo $fullName; ?></h2>
+                </div>
+                <div class='appointment-container'>
+                    <h1>Add Appointment</h1>
+                    <!-- Generate the dropdown list -->
+                    <form class='appointment-form' method='post' action='doctor_appointment.php'>
+                        <label for='patient'>Select Patient:</label>
+                        <select name='patient' id='patient'>
+                            <?php
+                            // Iterate over the patients and populate the dropdown list
+                            $patientQuery = "SELECT SSN, full_name FROM patient";
+                            $patientResult = $conn->query($patientQuery);
+                            while ($patientRow = $patientResult->fetch_assoc()) {
+                                $ssn = $patientRow['SSN'];
+                                $fullName = $patientRow['full_name'];
+                                echo "<option value='$ssn'>$ssn - $fullName</option>";
+                            }
+                            ?>
+                        </select>
+                        <br>
+                        <!-- Appointment input fields -->
+                        <label for='appointment_date'>Appointment Date:</label>
+                        <input type='date' name='appointment_date' id='appointment_date' class='field' required>
+                        <br>
+                        <label for='appointment_time'>Appointment Time:</label>
+                        <input type='time' name='appointment_time' id='appointment_time' class='field' required>
+                        <br>
+                        <label for='appointment_purpose'>Appointment Purpose:</label>
+                        <input type='text' name='appointment_purpose' id='appointment_purpose' class='field' required>
+                        <br>
+                        <input type='submit' value='Add Appointment' class='add-appointment-button'>
+                    </form>
+                    <!-- View Appointments button -->
+                    <button class='view-appointments-button' onclick='viewAppointments()'>View Appointments</button>
+                    <script>
+                        function viewAppointments() {
+                            window.location.href = 'doctor_view_appointments.php';
+                        }
+                    </script>
+                    <!-- Back button -->
+                    <button class='back-button' onclick='goBack()'>Back</button>
+                    <script>
+                        function goBack() {
+                            window.location.href = 'doctorpage.php';
+                        }
+                    </script>
+                </div>
+            </div>
+        </body>
+
+        </html>
+
+<?php
     } else {
         echo "Doctor not found.";
     }
@@ -120,75 +211,3 @@ if (isset($_SESSION['email'])) {
 
 $conn->close();
 ?>
-
-<style>
-    .user-info {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .user-info h2 {
-        color: #333;
-    }
-
-    body {
-        background-image: url('doctorappointment.webp');
-        background-size: cover;
-        background-position: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        margin: 0;
-    }
-
-    .appointment-container {
-        text-align: center;
-        margin-top: 20px;
-    }
-
-    .appointment-form {
-        display: inline-block;
-        text-align: left;
-        margin-bottom: 10px;
-    }
-
-    .appointment-form label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-        color: #333;
-    }
-
-    .appointment-form select,
-    .appointment-form input[type="text"],
-    .appointment-form input[type="date"],
-    .appointment-form input[type="time"] {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        margin-bottom: 10px;
-    }
-
-    .add-appointment-button,
-    .view-appointments-button,
-    .back-button {
-        display: block;
-        width: 150px;
-        padding: 8px 12px;
-        background-color: #333;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        margin: 5px auto;
-    }
-
-    .add-appointment-button:hover,
-    .view-appointments-button:hover,
-    .back-button:hover {
-        background-color: #555;
-    }
-</style>

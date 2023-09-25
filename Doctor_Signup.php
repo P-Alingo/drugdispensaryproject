@@ -26,20 +26,33 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     exit();
   }
 
+
   // Create the SQL query to insert the data into the doctor table
   $query = "INSERT INTO doctor (full_name, gender, specialization, years_of_experience, email, password, date_of_birth, phone_number, address) VALUES ('$full_name', '$gender', '$specialization', '$years_of_experience', '$email', '$password', '$date_of_birth', '$phone_number', '$address')";
 
+     // Execute the query
+     if ($conn->query($query) === TRUE) {
+      // Start the session
+      session_start();
+  
+      // Set the 'email' and 'full_name' in the session
+      $_SESSION['email'] = $email;
+      $_SESSION['full_name'] = $full_name;
+  
+      // After successful registration
+      $_SESSION['registration_success'] = true;
+      
   // Execute the query
   if ($conn->query($query) === TRUE) {
     // Doctor data saved successfully
     $conn->close();
-    header("Location: Doctor_login.html");
+    header("Location: http://localhost/myproject/drugdispensaryproject/doctorpage.php");
     exit();
   } else {
     echo "Error: " . $conn->error;
   }
 }
-
+}
 // Close the database connection
 $conn->close();
 ?>

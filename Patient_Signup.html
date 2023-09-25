@@ -9,12 +9,12 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f2f2f2;
       margin: 0;
       padding: 0;
     }
-    
+
     /* Styling for the video container */
     #video-container {
       position: fixed;
@@ -35,58 +35,92 @@
     h1 {
       text-align: center;
       color: #333;
+      font-weight: bold;
+      margin-bottom: 20px;
     }
 
-    form {
-      width: 90%; /* Reduce the form width to 90% of the available space */
-      max-width: 450px; /* Set a maximum width for the form */
+    .card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 90%; /* Increase the width of the card */
+      max-width: 350px; /* Set a maximum width for the card */
       margin: 20px auto;
       padding: 20px;
       background-color: #fff;
       border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      text-align: center; /* Center the text within the form */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added box-shadow */
+      text-align: center;
+    }
+
+    .field-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
     }
 
     label {
-      display: block;
-      margin-bottom: 8px;
-      color: #666;
+      flex: 1; /* Allow labels to take up equal space */
+      margin-right: 10px; /* Add spacing between label and input */
+      color: #333;
+      font-weight: bold;
+      text-align: left;
     }
 
     input,
     select,
     textarea {
-      width: 100%; /* Set the width to 100% to fill the container */
-      padding: 8px;
+      flex: 3; /* Allow inputs to take up more space */
+      padding: 12px;
       font-size: 14px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      width: 100%;
+      transition: border-color 0.3s, background-color 0.3s; /* Smooth transition on hover */
     }
 
     input[type="submit"] {
-      background-color: #614caf;
+      background-color: #3458b5;
       color: #fff;
       cursor: pointer;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      margin-top: 20px; /* Increased margin-top */
+      transition: background-color 0.3s; /* Smooth transition on hover */
     }
 
     input[type="submit"]:hover {
-      background-color: #6f45a0;
+      background-color: #2d4f9e;
     }
 
     button {
-      display: block;
-      margin-top: 20px;
-      background-color: #333;
+      background-color: #3458b5;
       color: #fff;
       padding: 10px 20px;
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      margin-top: 10px;
     }
 
     button:hover {
-      background-color: #555;
+      background-color: #2d4f9e;
+    }
+
+    /* Add placeholder styles */
+    input::placeholder,
+    select::placeholder,
+    textarea::placeholder {
+      color: #999;
+    }
+
+    /* Add hover styles for form fields */
+    input:hover,
+    select:hover,
+    textarea:hover {
+      border-color: #3458b5;
+      background-color: #f5f5f5;
     }
   </style>
 </head>
@@ -97,48 +131,50 @@
     </video>
   </div>
   <h1>Patient Signup</h1>
-  <form action="http://localhost/practicephp/Patient_Signup.php" method="POST">
-    <div>
-      <label for="full_name">Full Name:</label>
-      <input type="text" id="full_name" name="full_name" required>
-    </div>
-    <div>
-      <label for="gender">Gender:</label>
-      <select id="gender" name="gender">
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-        <option value="Other">Other</option>
-      </select>
-    </div>
-    <div>
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required>
-    </div>
-    <div>
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required>
-    </div>
-    <div>
-      <label for="date_of_birth">Date of Birth:</label>
-      <input type="date" id="date_of_birth" name="date_of_birth" required>
-    </div>
-    <div>
-      <label for="age">Age:</label>
-      <input type="number" id="age" name="age" required>
-    </div>
-    <div>
-      <label for="phone_number">Phone Number:</label>
-      <input type="tel" id="phone_number" name="phone_number" required>
-    </div>
-    <div>
-      <label for="address">Address:</label>
-      <textarea id="address" name="address" required></textarea>
-    </div>
-    <div>
-      <input type="submit" value="Sign Up">
-    </div>
-  </form>
-  <button onclick="window.location.href='http://localhost/practicephp/select_user_signup.html'">Back</button>
+  <div class="card">
+    <form action="http://localhost/myproject/drugdispensaryproject/Patient_Signup.php" method="POST">
+      <div class="field-container">
+        <label for="full_name">Full Name:</label>
+        <input type="text" id="full_name" name="full_name" required placeholder="Enter your full name">
+      </div>
+      <div class="field-container">
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+          <option value="" disabled selected>Select your gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="field-container">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required placeholder="Enter your email">
+      </div>
+      <div class="field-container">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required placeholder="Enter your password">
+      </div>
+      <div class="field-container">
+        <label for="date_of_birth">Date of Birth:</label>
+        <input type="date" id="date_of_birth" name="date_of_birth" required>
+      </div>
+      <div class="field-container">
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" required placeholder="Enter your age">
+      </div>
+      <div class="field-container">
+        <label for="phone_number">Phone Number:</label>
+        <input type="tel" id="phone_number" name="phone_number" required placeholder="Enter your phone number">
+      </div>
+      <div class="field-container">
+        <label for="address">Address:</label>
+        <textarea id="address" name="address" required placeholder="Enter your address"></textarea>
+      </div>
+      <div>
+        <input type="submit" value="Sign Up">
+      </div>
+    </form>
+  </div>
+  <button onclick="window.location.href='http://localhost/myproject/drugdispensaryproject/select_user_signup.html'">Back</button>
 </body>
 </html>
-

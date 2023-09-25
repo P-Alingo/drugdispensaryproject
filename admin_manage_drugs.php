@@ -4,20 +4,18 @@ require_once("connection.php");
 // Start the session
 session_start();
 
+// Initialize $full_Name
+$full_Name = "";
+
 // Check if the 'full_name' key is set in the session
 if (isset($_SESSION['full_name'])) {
     // Retrieve the user's name from the session
     $full_Name = $_SESSION['full_name'];
 }
 
-echo "<div class='user-info' style='font-size: 24px;'>";
-echo " $full_Name";
-echo "</div>";
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve the form data
-    $full_Name = $_SESSION['full_name'];
     $traceName = $_POST['trace_name'];
     $price = $_POST['price'];
     $quantity = $_POST['quantity'];
@@ -41,14 +39,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <style>
         body {
             background-image: url('adminmanagedrugs.jpeg');
-                            background-size: cover;
-                            background-position: center;
+            background-size: cover;
+            background-position: center;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 20px;
             font-family: Arial, sans-serif;
+        }
+
+        .card {
+            width: 350px; /* Set the width of the card */
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            /* Add a white background */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
         h2 {
@@ -60,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            width: 300px;
+            width: 100%; /* Set form width to match card */
         }
 
         label {
@@ -90,27 +99,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-    <form method="POST" action="admin_manage_drugs.php">
-        <label for="trace_name">Trace Name:</label>
-        <input type="text" name="trace_name" id="trace_name" required>
-        <br>
-        <label for="price">Price:</label>
-        <input type="text" name="price" id="price" required>
-        <br>
-        <label for="quantity">Quantity:</label>
-        <input type="text" name="quantity" id="quantity" required>
-        <br>
-        <input type="submit" value="Add Drug">
-    </form>
-
-    <form method="GET" action="admin_view_drugs.php">
-        <input type="submit" value="View All Drugs">
-    </form>
-    <form method="GET" action="adminpage.php">
-        <input type="submit" value="Back">
-    </form>
+    <div class="card">
+        <div class='user-info' style='font-size: 24px;'>
+            <?php echo $full_Name; ?>
+        </div>
+    
+        <h2>Admin Manage Drug</h2>
+        <form method="POST" action="admin_manage_drugs.php">
+            <label for="trace_name">Trace Name:</label>
+            <input type="text" name="trace_name" id="trace_name" required>
+            <br>
+            <label for="price">Price:</label>
+            <input type="text" name="price" id="price" required>
+            <br>
+            <label for="quantity">Quantity:</label>
+            <input type="text" name="quantity" id="quantity" required>
+            <br>
+            <input type="submit" value="Add Drug">
+        </form>
+    
+        <form method="GET" action="admin_view_drugs.php">
+            <input type="submit" value="View All Drugs">
+        </form>
+        <form method="GET" action="adminpage.php">
+            <input type="submit" value="Back">
+        </form>
+    </div>
 </body>
 </html>
-
-
-
