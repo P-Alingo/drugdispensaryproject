@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Drug Information Page</title>
+    <!-- Add Font Awesome CSS (you can link to it from a CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        #buttonsContainer {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Add icon styles */
+        button i {
+            margin-right: 5px;
+        }
+
+        #drugDetailsContainer {
+            opacity: 0;
+            transition: opacity 0.5s;
+            text-align: center;
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
+
+        /* Add fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Apply the animation */
+        #drugDetailsContainer.show {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <h1>Drug Categories</h1>
+    <div id="buttonsContainer">
+        <button id="antibioticsBtn"><i class="fas fa-pills"></i> Antibiotics</button>
+        <button id="vitaminsBtn"><i class="fas fa-vitamin"></i> Vitamins</button>
+        <button id="antiviralBtn"><i class="fas fa-viruses"></i> Antiviral</button>
+        <button id="antiallergyBtn"><i class="fas fa-allergies"></i> Antiallergy</button>
+    </div>
+
+    <div id="drugDetailsContainer"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const antibioticsBtn = document.getElementById("antibioticsBtn");
+            const vitaminsBtn = document.getElementById("vitaminsBtn");
+            const antiviralBtn = document.getElementById("antiviralBtn");
+            const antiallergyBtn = document.getElementById("antiallergyBtn");
+            const drugDetailsContainer = document.getElementById("drugDetailsContainer");
+            
+            // Function to fetch drug details from the server
+            function fetchDrugDetails(category) {
+                // Send an AJAX request to the server (PHP script) to fetch drug details
+                const xhr = new XMLHttpRequest();
+                xhr.open("GET", `get_drug_details.php?category=${category}`, true);
+                
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        const drugDetails = JSON.parse(xhr.responseText);
+                        displayDrugDetails(drugDetails);
+                    }
+                };
+                
+                xhr.send();
+            }
+            
+            // Function to display drug details with fade-in effect
+            function displayDrugDetails(details) {
+                drugDetailsContainer.style.opacity = 0; // Hide container initially
+                setTimeout(() => {
+                    drugDetailsContainer.innerHTML = `
+                        <h2>${details.name}</h2>
+                        <p>Description: ${details.description}</p>
+                        <p>Dosage Form: ${details.dosageForm}</p>
+                        <p>Strength: ${details.strength}</p>
+                        <p>Trade Name: ${details.tradeName}</p>
+                        <p>Price: $${details.price}</p>
+                        <p>Quantity: ${details.quantity}</p>
+                        <img src="${details.image}" alt="${details.name}" />
+                    `;
+                    drugDetailsContainer.style.opacity = 1; // Show container with fade-in effect
+                }, 100); // Delay to ensure smooth transition
+            }
+            
+            // Add click event listeners to buttons
+            antibioticsBtn.addEventListener("click", () => {
+                // Redirect to the antibiotics page
+                window.location.href = "drug_antibiotics.php";
+            });
+            
+            vitaminsBtn.addEventListener("click", () => {
+                // Redirect to the vitamins page
+                window.location.href = "drug_vitamins.php";
+            });
+            
+            antiviralBtn.addEventListener("click", () => {
+                // Redirect to the antiviral page
+                window.location.href = "drug_antiviral.php";
+            });
+
+            antiallergyBtn.addEventListener("click", () => {
+                // Redirect to the antiallergy page
+                window.location.href = "drug_antiallergy.php";
+            });
+        });
+    </script>
+</body>
+</html>

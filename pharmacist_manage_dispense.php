@@ -110,18 +110,15 @@
             </div>
 
             <div class="button-group">
-           
-<button type="button" class="indigo-button" name="Fill Details" onclick="autoFillPrescriptionDetails()">Fill Details</button>
-
-            <button type="button" class="indigo-button" name="dispense" onclick="autoFillPrescriptionDetails(); dispenseDrug();">Dispense Drug</button>
-
+                <button type="button" class="indigo-button" name="Fill Details" onclick="autoFillPrescriptionDetails()">Fill Details</button>
+                <button type="button" class="indigo-button" name="dispense" onclick="dispenseDrug()">Dispense Drug</button>
                 <a href='pharmacistpage.php' class='indigo-button back-button'>Back</a>
             </div>
         </form>
     </div>
 
     <script>
-     // Modify the autoFillPrescriptionDetails() function
+ // Modify the autoFillPrescriptionDetails() function
 function autoFillPrescriptionDetails() {
     const selectedPatient = document.getElementById("patient").value;
 
@@ -132,7 +129,7 @@ function autoFillPrescriptionDetails() {
 
     // Make an AJAX request to fetch prescription details
     const xhr = new XMLHttpRequest();
-    xhr.open('GET', `get_prescription_details.php?patient=${selectedPatient}`, true);
+    xhr.open('GET', `get_prescription_details.php?patient=${encodeURIComponent(selectedPatient)}`, true);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);
@@ -143,68 +140,54 @@ function autoFillPrescriptionDetails() {
                 // Populate the textboxes with prescription details
                 document.getElementById("prescription_id").value = response.prescription_id;
                 document.getElementById("drug_id").value = response.drug_id;
-                document.getElementById("patient_full_name").value = response.patient_full_name;
-                document.getElementById("doctor_full_name").value = response.doctor_full_name;
-                document.getElementById("trace_name").value = response.trace_name;
-                document.getElementById("date").value = response.date;
                 document.getElementById("dosage").value = response.dosage;
-                document.getElementById("quantity").value = response.quantity;
-                document.getElementById("price").value = response.price;
 
-                // Autofill patient_SSN and doctor_SSN
-                document.getElementById("patient_SSN").value = response.patient_SSN;
-                document.getElementById("doctor_SSN").value = response.doctor_SSN;
+                // Enable the quantity input field
+                document.getElementById("quantity").readOnly = false;
             }
         }
     };
     xhr.send();
 }
 
+// Add a new function to handle drug dispensing
+function dispenseDrug() {
+    // Get values from input fields
+    const prescriptionId = document.getElementById("prescription_id").value;
+    const drugId = document.getElementById("drug_id").value;
+    const quantity = document.getElementById("quantity").value;
 
+    // Validate quantity (you can add more validation)
+    if (!quantity || isNaN(quantity) || quantity <= 0) {
+        alert("Please enter a valid quantity.");
+        return;
+    }
 
-        function dispenseDrug() {
-            // Get the values from the form
-            const prescriptionID = document.getElementById("prescription_id").value;
-            const drugID = document.getElementById("drug_id").value;
-            const patientFullName = document.getElementById("patient_full_name").value;
-            const patientSSN = document.getElementById("patient_SSN").value;
-            const doctorFullName = document.getElementById("doctor_full_name").value;
-            const doctorSSN = document.getElementById("doctor_SSN").value;
-            const traceName = document.getElementById("trace_name").value;
-            const date = document.getElementById("date").value;
-            const dosage = document.getElementById("dosage").value;
-            const quantity = document.getElementById("quantity").value;
-            const price = document.getElementById("price").value;
+    // Make an AJAX request to save dispensing data to the database
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'dispense_drug.php', true);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
 
-            // Create a FormData object to send the data
-            const formData = new FormData();
-            formData.append("prescription_id", prescriptionID);
-            formData.append("drug_id", drugID);
-            formData.append("patient_full_name", patientFullName);
-            formData.append("patient_SSN", patientSSN);
-            formData.append("doctor_full_name", doctorFullName);
-            formData.append("doctor_SSN", doctorSSN);
-            formData.append("trace_name", traceName);
-            formData.append("date", date);
-            formData.append("dosage", dosage);
-            formData.append("quantity", quantity);
-            formData.append("price", price);
-
-            // Send an AJAX request to insert data into drug_dispense table
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "insert_drug_dispense.php", true);
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    const response = JSON.parse(xhr.responseText);
-                    if (response.success) {
-                        alert("Drug dispensed successfully!");
-                    } else {
-                        alert("Error dispensing drug: " + response.error);
-                    }
-                }
-            };
-            xhr.send(formData);
+            if (response.success) {
+                alert("Drug dispensed successfully.");
+                // Clear form or redirect as needed
+                document.getElementById("quantity").value = "";
+                document.getElementById("quantity").readOnly = true;
+            } else {
+                alert("Error dispensing drug.");
+            }
         }
+    };
+
+    // Send data to the PHP script
+    const data = `prescription_id=${prescriptionId}&drug_id=${drugId}&quantity=${quantity}`;
+    xhr.send(data);
+}
+
+       
     </script>
 
     <style>

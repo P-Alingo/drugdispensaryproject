@@ -6,9 +6,9 @@ if (isset($_GET['patient'])) {
     $selectedPatient = $_GET['patient'];
 
     // Query to fetch prescription details
-    $query = "SELECT prescription_id, drug_id, patient_SSN, patient_full_name,  doctor_SSN, doctor_full_name, trace_name, date, dosage, quantity, price
-            FROM prescription
-            WHERE patient_SSN = ?"; // Use a parameterized query
+    $query = "SELECT prescription_id, drug_id, patient_SSN, patient_full_name, doctor_SSN, doctor_full_name, trace_name, date, dosage, quantity, price
+              FROM prescription
+              WHERE patient_SSN = ?";
 
     // Prepare the statement
     $stmt = $conn->prepare($query);
@@ -34,7 +34,4 @@ if (isset($_GET['patient'])) {
         echo json_encode(['error' => 'Error preparing statement']);
     }
 }
-
-
-
 ?>

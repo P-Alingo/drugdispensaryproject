@@ -140,6 +140,10 @@ if (isset($_SESSION['full_name'])) {
     <a href="admin_manage_drugs.php" class="button">Drugs</a>
     <p>Click here to manage the drugs in the system</p>
     </div>
+    <div class="card">
+    <a href="admin_add_drug.php" class="button">Add Drugs</a>
+    <p>Click here to manage the drugs in the system</p>
+    </div>
     </div>
   
     <a href="project.html" class="button">Log Out</a>
